@@ -1,0 +1,69 @@
+/* Reader screen */
+.reader-bar { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
+.reader-tabs { display: flex; gap: 2px; border-bottom: 1px solid var(--border); }
+.reader-tab { background: transparent; color: var(--text-muted, #a6adc8); border: 0; border-bottom: 2px solid transparent; margin-bottom: -1px; padding: 4px 14px; font: inherit; font-size: 13px; cursor: pointer; }
+.reader-tab:hover { color: inherit; }
+.reader-tab.active { color: inherit; font-weight: 600; border-bottom-color: #7c6af7; }
+.reader-pair { display: flex; align-items: center; gap: 10px; padding: 2px 6px; border-radius: 4px; cursor: pointer; font-size: 12px; }
+.reader-pair:hover { background: rgba(124, 106, 247, 0.18); }
+.reader-pair-name { flex: 0 0 300px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.reader-pair-bar { flex: 1; height: 9px; background: rgba(255, 255, 255, 0.06); border-radius: 5px; overflow: hidden; }
+.reader-pair-bar > span { display: block; height: 100%; background: #7c6af7; border-radius: 5px; }
+.reader-pair-n { flex: 0 0 44px; text-align: right; font-variant-numeric: tabular-nums; }
+.reader-matrix { border-collapse: collapse; font-size: 11px; }
+.reader-matrix th, .reader-matrix td { border: 1px solid var(--border); padding: 3px 7px; text-align: center; white-space: nowrap; }
+.reader-matrix thead th { position: sticky; top: 0; background: var(--surface, #1e1e2e); font-weight: 600; }
+.reader-matrix tbody th { text-align: left; font-weight: 600; position: sticky; left: 0; background: var(--surface, #1e1e2e); }
+.reader-matrix td.on { cursor: pointer; font-weight: 600; font-variant-numeric: tabular-nums; }
+.reader-matrix td.on:hover { outline: 2px solid #cba6f7; }
+.reader-chip { display: inline-flex; align-items: center; gap: 5px; padding: 2px 8px; border: 1px solid var(--border); border-radius: 999px; font-size: 12px; white-space: nowrap; }
+.reader-chip-btn { background: transparent; color: inherit; cursor: pointer; font-family: inherit; }
+.reader-chip-btn:hover:not(:disabled) { background: rgba(124, 106, 247, 0.22); border-color: #7c6af7; }
+.reader-chip-btn:disabled { opacity: 0.5; cursor: default; }
+.reader-chip i { display: inline-block; width: 11px; height: 11px; border-radius: 3px; }
+.reader-tip { position: fixed; z-index: 3000; max-width: 560px; padding: 7px 10px; background: #11111b; color: #cdd6f4; border: 1px solid #45475a; border-radius: 6px; font-size: 12px; line-height: 1.5; box-shadow: 0 6px 22px rgba(0,0,0,0.5); pointer-events: none; }
+.reader-tip-sec { padding-left: 8px; }
+.reader-tip-ex { border-left: 3px solid #2563eb; }
+.reader-tip-un { border-left: 3px dotted #2563eb; }
+.reader-tip-as { border-left: 3px dashed #9333ea; }
+.reader-tip-h { font-size: 11px; color: #a6adc8; margin-bottom: 2px; }
+.reader-tip-row { margin-top: 2px; }
+.reader-tip-tag { display: inline-block; margin-right: 6px; padding: 0 5px; border-radius: 999px; background: #313244; color: #a6adc8; font-size: 10px; }
+.rt-np1 { border-bottom: 2px solid #60a5fa; }
+.rt-np2 { border-bottom: 2px solid #2dd4bf; }
+.rt-pred { color: #94a3b8; font-weight: 600; }
+.reader-tip code { font-family: Consolas, monospace; color: #f9e2af; word-break: break-all; }
+.reader-frame { width: 100%; border: 1px solid var(--border); border-radius: 6px; background: #fff; display: block; }
+.reader-pdf { background: #5a5a66; padding: 12px; border-radius: 6px; overflow: auto; }
+.reader-pdf-page { position: relative; margin: 0 auto 12px; background: #fff; box-shadow: 0 2px 10px rgba(0,0,0,0.4); --scale-round-x: 1px; --scale-round-y: 1px; }
+.reader-pdf-page canvas { display: block; }
+
+/* the text layer of a rendered PDF page (the rules pdf.js needs, from pdfjs-dist/web/pdf_viewer.css) */
+.reader-pdf .textLayer { position: absolute; text-align: initial; inset: 0; overflow: clip; opacity: 1; line-height: 1; letter-spacing: normal; word-spacing: normal; text-size-adjust: none; forced-color-adjust: none; transform-origin: 0 0; z-index: 0; --min-font-size: 1; --text-scale-factor: calc(var(--total-scale-factor) * var(--min-font-size)); --min-font-size-inv: calc(1 / var(--min-font-size)); }
+.reader-pdf .textLayer :is(span, br) { color: transparent; position: absolute; white-space: pre; cursor: text; transform-origin: 0% 0%; user-select: text; }
+.reader-pdf .textLayer > :not(.markedContent), .reader-pdf .textLayer .markedContent span:not(.markedContent) { z-index: 1; --font-height: 0; font-size: calc(var(--text-scale-factor) * var(--font-height)); --scale-x: 1; --rotate: 0deg; transform: rotate(var(--rotate)) scaleX(var(--scale-x)) scale(var(--min-font-size-inv)); }
+.reader-pdf .textLayer .markedContent { display: contents; }
+.reader-pdf .textLayer ::selection { background: rgba(0, 0, 255, 0.25); color: transparent; }
+/* the highlight spans inside a text-layer span are plain inline pieces of it */
+.reader-pdf .textLayer .nlp-seg { position: static !important; transform: none !important; font-size: inherit !important; z-index: auto !important; cursor: default; }
+.reader-pdf.nlp-rel .nlp-sent.nlp-r { text-decoration: underline wavy #7b1fa2; text-decoration-thickness: 1.6px; text-underline-offset: 3px; text-decoration-skip-ink: none; }
+/* the triples of a sentence (NP1 / predicate / NP2 marked by lines under them; no sentence marks and badges in a PDF: the text layer is positioned by the page) */
+.reader-pdf.nlp-asr .nlp-a-np1 { box-shadow: inset 0 -3px 0 0 #2563eb; }
+.reader-pdf.nlp-asr .nlp-a-np2 { box-shadow: inset 0 -3px 0 0 #0d9488; }
+.reader-pdf.nlp-asr .nlp-a-np1.nlp-a-np2 { box-shadow: inset 0 -3px 0 0 #2563eb, inset 0 -6px 0 0 #0d9488; }
+.reader-pdf.nlp-asr .nlp-a-pred { box-shadow: inset 0 -2px 0 0 #64748b; }
+.reader-pdf.nlp-una .nlp-u-np1 { box-shadow: inset 0 -2px 0 0 rgba(37, 99, 235, 0.55); }
+.reader-pdf.nlp-una .nlp-u-np2 { box-shadow: inset 0 -2px 0 0 rgba(13, 148, 136, 0.55); }
+.reader-pdf.nlp-una .nlp-u-pred { box-shadow: inset 0 -1px 0 0 #64748b; }
+
+/* PDF: "Color font" mode and page background (the page is an image: a lighter / darker tint of it) */
+.reader-pdf.nlp-hl:not(.nlp-font) .nlp-ent { background: rgba(var(--rgb), 0.4); border-radius: 2px; }
+.reader-pdf.nlp-hl.nlp-font .textLayer .nlp-ent { color: rgb(var(--rgb)) !important; font-weight: 700; background: var(--pagebg, #fff); }
+.reader-pdf.nlp-hl.nlp-font:not(.nlp-bg-dark):not(.nlp-bg-gray) .nlp-ent.nlp-light { -webkit-text-stroke: 0.5px rgba(0,0,0,0.6); paint-order: stroke fill; }
+.reader-pdf.nlp-hl.nlp-font.nlp-bg-dark .nlp-ent.nlp-dark, .reader-pdf.nlp-hl.nlp-font.nlp-bg-gray .nlp-ent.nlp-dark { -webkit-text-stroke: 0.5px rgba(255,255,255,0.8); paint-order: stroke fill; }
+.reader-pdf.nlp-bg-light { --pagebg: #e4e4e4; }
+.reader-pdf.nlp-bg-gray { --pagebg: #8d8d8d; }
+.reader-pdf.nlp-bg-dark { --pagebg: #1f1f28; }
+.reader-pdf.nlp-bg-light .reader-pdf-page, .reader-pdf.nlp-bg-gray .reader-pdf-page, .reader-pdf.nlp-bg-dark .reader-pdf-page { background: var(--pagebg); }
+.reader-pdf.nlp-bg-light canvas, .reader-pdf.nlp-bg-gray canvas { mix-blend-mode: multiply; }
+.reader-pdf.nlp-bg-dark canvas { filter: invert(0.9) hue-rotate(180deg); }
